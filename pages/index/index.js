@@ -1,52 +1,90 @@
-// index.js
-const defaultAvatarUrl = 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'
+import { mockTripData } from '../../utils/mocks';
 
 Component({
   data: {
-    motto: 'Hello World',
-    userInfo: {
-      avatarUrl: defaultAvatarUrl,
-      nickName: '',
+    ...mockTripData,
+  },
+  lifetimes: {
+    attached() {
+      wx.loadFontFace({
+        family: 'Monaco',
+        source: 'url("https://fonts.cdnfonts.com/s/14106/Monaco.woff")',
+        scopes: ['webview', 'native'],
+        success: (res) => {
+          console.log('success', res.status);
+          this.render();
+        },
+        fail: function (res) {
+          console.error(res);
+        },
+        complete(res) {
+          console.log('🚀 ~ loadFontFace ~ complete ~ res:', res);
+        },
+      });
     },
-    hasUserInfo: false,
-    canIUseGetUserProfile: wx.canIUse('getUserProfile'),
-    canIUseNicknameComp: wx.canIUse('input.type.nickname'),
   },
   methods: {
-    // 事件处理函数
-    bindViewTap() {
-      wx.navigateTo({
-        url: '../logs/logs'
-      })
-    },
-    onChooseAvatar(e) {
-      const { avatarUrl } = e.detail
-      const { nickName } = this.data.userInfo
-      this.setData({
-        "userInfo.avatarUrl": avatarUrl,
-        hasUserInfo: nickName && avatarUrl && avatarUrl !== defaultAvatarUrl,
-      })
-    },
-    onInputChange(e) {
-      const nickName = e.detail.value
-      const { avatarUrl } = this.data.userInfo
-      this.setData({
-        "userInfo.nickName": nickName,
-        hasUserInfo: nickName && avatarUrl && avatarUrl !== defaultAvatarUrl,
-      })
-    },
-    getUserProfile(e) {
-      // 推荐使用wx.getUserProfile获取用户信息，开发者每次通过该接口获取用户个人信息均需用户确认，开发者妥善保管用户快速填写的头像昵称，避免重复弹窗
-      wx.getUserProfile({
-        desc: '展示用户信息', // 声明获取用户个人信息后的用途，后续会展示在弹窗中，请谨慎填写
+    handleDownloadPoster() {
+      wx.loadFontFace({
+        family: 'Monaco',
+        source: 'url("https://fonts.cdnfonts.com/s/14106/Monaco.woff")',
+        scopes: ['webview', 'native'],
         success: (res) => {
-          console.log(res)
-          this.setData({
-            userInfo: res.userInfo,
-            hasUserInfo: true
-          })
-        }
-      })
+          console.log('success', res.status);
+          this.render();
+        },
+        fail: function (res) {
+          console.error(res);
+        },
+        complete(res) {
+          console.log('111', res);
+        },
+      });
+
+      this.createSelectorQuery()
+        .select('#view')
+        .node()
+        .exec((res) => {
+          const node = res[0].node;
+          console.log('🚀 ~ .exec ~ node:', node);
+
+          node.takeSnapshot({
+            type: 'arraybuffer',
+            format: 'png',
+            success: (res) => {
+              console.log('@@ res:', res);
+              const f = `${wx.env.USER_DATA_PATH}/share.png`;
+              const fs = wx.getFileSystemManager();
+              console.log('🚀 ~ .exec ~ f:', f);
+              fs.writeFileSync(f, res.data, 'binary');
+              wx.showToast({
+                title: '保存成功',
+              });
+
+              this.setData({
+                img: f,
+              });
+
+              // setTimeout(() => {
+              wx.saveImageToPhotosAlbum({
+                filePath: f,
+                complete(res) {
+                  console.log('🚀 ~ complete ~ res:', res);
+                },
+              });
+              // }, 1000)
+              wx.getImageInfo({
+                src: f,
+                success(res) {
+                  console.log('🚀 ~ success ~ res:', res);
+                },
+              });
+            },
+            fail(res) {
+              console.log('🚀 ~ fail ~ res:', res);
+            },
+          });
+        });
     },
   },
-})
+});

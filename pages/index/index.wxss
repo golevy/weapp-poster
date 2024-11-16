@@ -1,63 +1,53 @@
-/**index.wxss**/
-page {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
+@font-face {
+  font-family: 'test';
+  src: url('https://wximg.qq.com/cityservices/font/FZFWQingYinTiJWD.TTF');
 }
 
-.scrollarea {
-  flex: 1;
-  overflow-y: hidden;
+.bg-snapshot {
+  background: #669aff;
 }
 
-.userinfo {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: #aaa;
-  width: 80%;
-}
-
-.userinfo-avatar {
-  overflow: hidden;
-  width: 128rpx;
-  height: 128rpx;
-  margin: 20rpx;
-  border-radius: 50%;
-}
-
-.usermotto {
-  margin-top: 200px;
-}
-
-.avatar-wrapper {
-  padding: 0;
-  width: 56px !important;
-  border-radius: 8px;
-  margin-top: 40px;
-  margin-bottom: 40px;
-}
-
-.avatar {
-  display: block;
-  width: 56px;
-  height: 56px;
-}
-
-.nickname-wrapper {
-  display: flex;
+.poster-img {
   width: 100%;
-  padding: 16px;
-  box-sizing: border-box;
-  border-top: .5px solid rgba(0, 0, 0, 0.1);
-  border-bottom: .5px solid rgba(0, 0, 0, 0.1);
-  color: black;
 }
 
-.nickname-label {
-  width: 105px;
+.black-gradient {
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.2) 40%,
+    rgba(0, 0, 0, 1) 100%
+  );
 }
 
-.nickname-input {
-  flex: 1;
+.real-line {
+  width: 100%;
+  border-bottom: dashed 3rpx #e8f0ff;
+  margin-bottom: 10px;
+}
+
+.left-line {
+  width: 12px;
+  height: 20px;
+  background-color: #6f9afa;
+  border-radius: 0 12px 12px 0;
+}
+
+.right-line {
+  width: 12px;
+  height: 20px;
+  background-color: #6f9afa;
+  border-radius: 12px 0 0 12px;
+}
+
+.truncate-ellipsis {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 450rpx;
+}
+
+.bg-blue-gradient {
+  background: linear-gradient(to right, #f1faff, #e4ebf9);
 }

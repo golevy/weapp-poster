@@ -1,28 +1,86 @@
-<!--index.wxml-->
-<navigation-bar title="Weixin" back="{{false}}" color="black" background="#FFF"></navigation-bar>
-<scroll-view class="scrollarea" scroll-y type="list">
-  <view class="container">
-    <view class="userinfo">
-      <block wx:if="{{canIUseNicknameComp && !hasUserInfo}}">
-        <button class="avatar-wrapper" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
-          <image class="avatar" src="{{userInfo.avatarUrl}}"></image>
-        </button>
-        <view class="nickname-wrapper">
-          <text class="nickname-label">昵称</text>
-          <input type="nickname" class="nickname-input" placeholder="请输入昵称" bind:change="onInputChange" />
+<navigation-bar title="Poster" back="{{false}}" color="black" background="#fff" />
+<scroll-view class="h-screen w-full" scroll-y type="custom">
+  <snapshot id="view" class="text-center">
+    <view class="relative bg-snapshot pb-20">
+      <view>
+        <view class="w-full text-center text-white py-10">
+          <text>向你分享了一个旅行，</text>
+          <text>快来加入！👉</text>
         </view>
-      </block>
-      <block wx:elif="{{!hasUserInfo}}">
-        <button wx:if="{{canIUseGetUserProfile}}" bindtap="getUserProfile"> 获取头像昵称 </button>
-        <view wx:else> 请使用2.10.4及以上版本基础库 </view>
-      </block>
-      <block wx:else>
-        <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
-        <text class="userinfo-nickname">{{userInfo.nickName}}</text>
-      </block>
+        <view class="h-full mx-6 z-20">
+          <view class="relative flex flex-col gap-4 z-50 bg-white p-6 pt-0 h-full rounded-2xl">
+            <view class="bg-white p-6 pb-4 flex flex-col rounded-2xl rounded-b-none border-b-none -mx-6">
+              <view class="flex items-center justify-between mb-2">
+                <view class="font-bold text-lg truncate-ellipsis">{{trip.title}}</view>
+                <view class="flex items-center ml-1">
+                  <view wx:for="{{displayedCompanions}}" wx:for-item="companion" wx:key="_id" class="flex items-center">
+                    <view class="border border-solid border-blue rounded-full flex-shrink-0 w-5 h-5 -ml-2 overflow-hidden">
+                      <image src="{{companion.avatarUrl}}" mode="aspectFit" class="w-full h-full rounded-full bg-blue-300" />
+                    </view>
+                  </view>
+                  <view wx:if="{{extraCompanionsCount > 0}}" class="flex items-center ml-1 text-muted text-xs font-semibold">
+                    +{{extraCompanionsCount}}
+                  </view>
+                </view>
+              </view>
+              <view class="flex items-center justify-between">
+                <view wx:if="{{formattedTripStartDate && formattedTripEndDate}}" class="text-xs flex items-center gap-2">
+                  <view class="text-time">
+                    {{ formattedTripStartDate }} - {{ formattedTripEndDate }}
+                  </view>
+                </view>
+                <view class="text-xs text-time">共 {{ companions.length }} 人加入</view>
+              </view>
+            </view>
+            <view class="z-50 bg-white flex flex-row -mx-6 pb-4">
+              <view class="left-line" />
+              <view class="real-line" />
+              <view class="right-line" />
+            </view>
+            <block wx:for="{{schedules}}" wx:key="index">
+              <view class="flex flex-col">
+                <view wx:if="{{index !== 0}}" class="schedule-dash my-2" />
+                <view class="flex items-center justify-between mb-2">
+                  <view class="text-sm flex items-center">
+                    <view wx:if="{{ item.formattedDate && item.dayOfWeek }}" class="text-muted text-xs">
+                      {{item.formattedDate}}，{{item.dayOfWeek}}
+                    </view>
+                  </view>
+                </view>
+                <block wx:if="{{item.content}}">
+                  <view data-day="{{index}}" class="text-content mb-2">
+                    <text class="text-sm leading-6 text-black text-left" decode="{{true}}">{{item.content}}</text>
+                    <block wx:if="{{item.locations.length > 0}}">
+                      <block wx:for="{{item.locations}}" wx:key="index">
+                        <view data-location="{{item}}" class="flex items-center mt-3 justify-between p-4 rounded-lg bg-blue-gradient">
+                          <view class="flex flex-col">
+                            <view class="text-location text-sm truncate-ellipsis text-left mb-1dot5">
+                              {{item.name}}
+                            </view>
+                            <view class="text-xs text-address truncate-ellipsis">
+                              {{item.address}}
+                            </view>
+                          </view>
+                        </view>
+                      </block>
+                    </block>
+                  </view>
+                </block>
+                <block wx:else>
+                  <view class="flex items-center mb-2 justify-between rounded-lg text-sm text-address italic">
+                    未填写行程安排
+                  </view>
+                </block>
+              </view>
+            </block>
+          </view>
+        </view>
+      </view>
+      <view class="fixed bottom-0 z-30 flex items-center justify-center w-full h-28 py-4 px-3">
+        <view class="flex items-center text-center justify-center w-fit text-white bg-blue-500 rounded-full py-3dot5 px-16 relative z-10" bindtap="handleDownloadPoster">
+          <text>保存海报</text>
+        </view>
+      </view>
     </view>
-    <view class="usermotto">
-      <text class="user-motto">{{motto}}</text>
-    </view>
-  </view>
+  </snapshot>
 </scroll-view>
